@@ -1,4 +1,4 @@
-package ray
+package xray
 
 // Arg describes ray logging qualifier (argument)
 type Arg interface {
