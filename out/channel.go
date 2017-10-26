@@ -4,7 +4,7 @@ import "github.com/mono83/xray"
 
 // Channel builds wrapper over events handler, that works in asynchronous mode
 // using delivery goroutine and channel
-func Channel(target func(...xray.Event)) func(...xray.Event) {
+func Channel(target xray.Handler) func(...xray.Event) {
 	ch := &channeled{
 		ch:     make(chan xray.Event),
 		target: target,
@@ -16,7 +16,7 @@ func Channel(target func(...xray.Event)) func(...xray.Event) {
 
 type channeled struct {
 	ch     chan xray.Event
-	target func(...xray.Event)
+	target xray.Handler
 }
 
 func (c *channeled) wait() {
