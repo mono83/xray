@@ -1,34 +1,55 @@
-package ray
+package xray
+
+// MetricType describes metric type
+type MetricType byte
+
+// Level describes logging level
+type Level byte
+
+// List of defined log levels
+const (
+	TRACE    Level = iota
+	DEBUG
+	INFO
+	WARNING
+	ERROR
+	ALERT
+	CRITICAL
+)
+
+// List of defined metric types
+const (
+	INCREMENT MetricType = iota
+	GAUGE
+	DURATION
+)
 
 // Event describes ray logging event
 type Event interface {
-	// Splits separates event into logging and metrics ones.
-	// Both can be nil and both can be set
-	Split() ([]LogEvent, []MetricsEvent)
-
-	// Args returns map of arguments for event
-	Args() []Arg
+	RayIDProvider
+	Bucket
 }
 
 // LogEvent represents logging event
 type LogEvent interface {
 	Event
 
-	// Message returns string to log
-	Message() string
+	// GetLevel returns logging level
+	GetLevel() Level
+
+	// GetLogger returns logger name
+	GetLogger() string
+
+	// GetMessage returns string to log
+	GetMessage() string
 }
 
 // MetricsEvent represents metrics event
 type MetricsEvent interface {
 	Event
 
-	Key() string
-	Value() int64
-}
-
-// EmittedEvent describes emitted event
-type EmittedEvent struct {
-	Event
-	Emitter Interface
-	Depth   int
+	// GetKey returns metrics key
+	GetKey() string
+	// GetValue return metrics value
+	GetValue() int64
 }
