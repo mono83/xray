@@ -1,6 +1,7 @@
-package xray
+package text
 
 import (
+	"github.com/mono83/xray"
 	"github.com/mono83/xray/args"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -9,7 +10,7 @@ import (
 func TestInterpolatePlainText(t *testing.T) {
 	assert := assert.New(t)
 
-	bucket := CreateBucket(
+	bucket := xray.CreateBucket(
 		args.Name("tester"),
 		args.Int64{N: "id", V: 15},
 	)
