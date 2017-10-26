@@ -31,6 +31,20 @@ func newLogEvent(r Ray, t Level, message string, args []Arg) LogEvent {
 	}
 }
 
+// newDumpingEvent builds new data dumping event
+func newDumpingEvent(r Ray, t DumpSource, data []byte, args []Arg) ByteDumpEvent {
+	return &dumpEvent{
+		event: event{
+			id:       r.GetRayID(),
+			base:     r.GetArguments(),
+			provided: args,
+		},
+		t:     t,
+		time:  time.Now(),
+		bytes: data,
+	}
+}
+
 type event struct {
 	id         string
 	base       Bucket
@@ -74,3 +88,15 @@ func (l logEvent) GetTime() time.Time { return l.time }
 func (l logEvent) GetLevel() Level    { return l.t }
 func (l logEvent) GetLogger() string  { return l.logger }
 func (l logEvent) GetMessage() string { return l.message }
+
+type dumpEvent struct {
+	event
+
+	t     DumpSource
+	time  time.Time
+	bytes []byte
+}
+
+func (d dumpEvent) GetTime() time.Time    { return d.time }
+func (d dumpEvent) GetSource() DumpSource { return d.t }
+func (d dumpEvent) GetBytes() []byte      { return d.bytes }

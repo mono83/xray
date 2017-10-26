@@ -14,6 +14,7 @@ func main() {
 
 	// Registering stdout printer on ROOT logger
 	xray.ROOT.On(os.StdOutLogger(xray.TRACE))
+	xray.ROOT.On(os.StdOutDumper())
 
 	// Forking
 	ray := xray.BOOT.Fork().WithLogger("main-test")
@@ -27,6 +28,10 @@ func main() {
 	ray.Alert("This is :name message", args.Name("alert"))
 	ray.Critical("This is :name message", args.Name("critical"))
 	ray.Pass(fmt.Errorf("example passing error"))
+
+	// Sending dump information
+	ray.OutBytes([]byte("Hello, world"))
+	ray.InBytes([]byte("Received response"))
 
 	time.Sleep(100 * time.Millisecond)
 }

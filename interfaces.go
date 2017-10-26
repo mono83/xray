@@ -39,6 +39,9 @@ type ExtendedEmitter interface {
 	Gauge(string, int64, ...Arg)
 	Duration(string, time.Duration, ...Arg)
 
+	OutBytes([]byte, ...Arg)
+	InBytes([]byte, ...Arg)
+
 	Pass(error) error
 
 	Trace(string, ...Arg)
@@ -121,6 +124,12 @@ type MetricsEvent interface {
 type ByteDumpEvent interface {
 	Event
 
+	// GetTime returns event generation time
+	GetTime() time.Time
+
+	// GetSource return dump source
 	GetSource() DumpSource
-	GetData() []byte
+
+	// GetBytes returns dump contents
+	GetBytes() []byte
 }

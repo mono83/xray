@@ -13,6 +13,7 @@ var colorVarLow = New(FgHiBlack, Underline)
 var colorVarNormal = New(FgCyan)
 var colorVarHi = New(FgYellow)
 var colorBadge = New(BgRed, FgHiWhite, Bold)
+var colorDumpType = New(FgCyan)
 
 func getMessageColor(level xray.Level) Color {
 	switch level {

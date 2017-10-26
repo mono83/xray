@@ -24,3 +24,20 @@ func StdOutLogger(level xray.Level) xray.Handler {
 		},
 	)
 }
+
+// StdOutDumper returns new asynchronous events handler, that prints dumping events
+// into standard output stream
+func StdOutDumper() xray.Handler {
+	return out.Filter(
+		out.Channel(
+			writer.New(
+				os.Stdout,
+				color.FormatDumpEvent,
+			),
+		),
+		func(e xray.Event) bool {
+			_, ok := e.(xray.ByteDumpEvent)
+			return ok
+		},
+	)
+}

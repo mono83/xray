@@ -13,6 +13,9 @@ func (r *ray) Pass(err error) error {
 	return err
 }
 
+func (r *ray) OutBytes(data []byte, args ...Arg) { r.Emit(newDumpingEvent(r, OUT, data, args)) }
+func (r *ray) InBytes(data []byte, args ...Arg)  { r.Emit(newDumpingEvent(r, IN, data, args)) }
+
 func (r *ray) Trace(msg string, args ...Arg)    { r.Emit(newLogEvent(r, TRACE, msg, args)) }
 func (r *ray) Debug(msg string, args ...Arg)    { r.Emit(newLogEvent(r, DEBUG, msg, args)) }
 func (r *ray) Info(msg string, args ...Arg)     { r.Emit(newLogEvent(r, INFO, msg, args)) }
