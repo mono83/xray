@@ -18,13 +18,16 @@ type Bucket interface {
 	Args() []Arg
 }
 
+// Handler is events handler function
+type Handler func(...Event)
+
 // EventEmitter describes common event emitter interface
 type EventEmitter interface {
 	// Emit method emits event into ray
 	Emit(...Event)
 
 	// On registers listeners of logging events
-	On(func(...Event))
+	On(Handler)
 }
 
 // ExtendedEmitter is extended event emitter, that has helper methods to build events
@@ -35,6 +38,8 @@ type ExtendedEmitter interface {
 	Increment(string, int64, ...Arg)
 	Gauge(string, int64, ...Arg)
 	Duration(string, time.Duration, ...Arg)
+
+	Pass(error) error
 
 	Trace(string, ...Arg)
 	Debug(string, ...Arg)
@@ -86,6 +91,9 @@ type Event interface {
 // LogEvent represents logging event
 type LogEvent interface {
 	Event
+
+	// GetTime returns event generation time
+	GetTime() time.Time
 
 	// GetLevel returns logging level
 	GetLevel() Level

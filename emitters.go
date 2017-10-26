@@ -9,7 +9,7 @@ func NewSyncEmitter() EventEmitter {
 
 type syncEmitter struct {
 	m         sync.Mutex
-	listeners []func(...Event)
+	listeners []Handler
 }
 
 func (s *syncEmitter) Emit(events ...Event) {
@@ -20,7 +20,7 @@ func (s *syncEmitter) Emit(events ...Event) {
 	}
 }
 
-func (s *syncEmitter) On(c func(...Event)) {
+func (s *syncEmitter) On(c Handler) {
 	s.m.Lock()
 	defer s.m.Unlock()
 

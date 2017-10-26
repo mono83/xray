@@ -1,6 +1,17 @@
 package xray
 
-import "time"
+import (
+	"github.com/mono83/xray/args"
+	"time"
+)
+
+func (r *ray) Pass(err error) error {
+	if err != nil {
+		r.Error("Error encountered - :err", args.Error{Err: err})
+	}
+
+	return err
+}
 
 func (r *ray) Trace(msg string, args ...Arg)    { r.Emit(newLogEvent(r, TRACE, msg, args)) }
 func (r *ray) Debug(msg string, args ...Arg)    { r.Emit(newLogEvent(r, DEBUG, msg, args)) }

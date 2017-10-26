@@ -1,5 +1,7 @@
 package xray
 
+import "time"
+
 // newMetricEvent builds new metric event
 func newMetricEvent(r Ray, t MetricType, key string, value int64, args []Arg) *metricEvent {
 	return &metricEvent{
@@ -23,6 +25,7 @@ func newLogEvent(r Ray, t Level, message string, args []Arg) LogEvent {
 			provided: args,
 		},
 		t:       t,
+		time:    time.Now(),
 		logger:  r.GetLogger(),
 		message: message,
 	}
@@ -62,10 +65,12 @@ func (m metricEvent) GetValue() int64     { return m.value }
 type logEvent struct {
 	event
 	t       Level
+	time    time.Time
 	logger  string
 	message string
 }
 
+func (l logEvent) GetTime() time.Time { return l.time }
 func (l logEvent) GetLevel() Level    { return l.t }
 func (l logEvent) GetLogger() string  { return l.logger }
 func (l logEvent) GetMessage() string { return l.message }

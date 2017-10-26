@@ -2,8 +2,8 @@ package out
 
 import "github.com/mono83/xray"
 
-// Filter provides filtering adapter
-func Filter(target func(...xray.Event), predicate func(event xray.Event) bool) func(...xray.Event) {
+// Filter provides handler filtering adapter
+func Filter(target xray.Handler, predicate func(event xray.Event) bool) xray.Handler {
 	return func(events ...xray.Event) {
 		l := len(events)
 		if l == 0 {
