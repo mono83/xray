@@ -6,6 +6,7 @@ import "time"
 type Arg interface {
 	Name() string
 	Value() string
+	Scalar() interface{}
 }
 
 // Bucket is container for arguments
