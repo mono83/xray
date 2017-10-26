@@ -1,19 +1,9 @@
 package xray
 
-// Bucket is container for arguments
-type Bucket interface {
-	// Size return number of args within bucket
-	Size() int
-	// Get returns argument (or nil) by key
-	Get(string) Arg
-	// Args returns args slice
-	Args() []Arg
-}
-
 // CreateBucket creates bucket for provided arguments
-func CreateBucket(args ... Arg) Bucket {
+func CreateBucket(args ...Arg) Bucket {
 	l := len(args)
-	if l == 0 {
+	if l == 0 || (l == 1 && args[0] == nil) {
 		return emptyBucketInstance
 	} else if l == 1 {
 		return singleArgBucket{Arg: args[0]}
@@ -29,7 +19,7 @@ func CreateBucket(args ... Arg) Bucket {
 }
 
 // AppendBucket appends arguments to existing bucket
-func AppendBucket(src Bucket, args ... Arg) Bucket {
+func AppendBucket(src Bucket, args ...Arg) Bucket {
 	if src == nil && len(args) == 0 {
 		return emptyBucketInstance
 	} else if len(args) == 0 {

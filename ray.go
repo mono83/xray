@@ -1,22 +1,69 @@
-package ray
+package xray
 
-// Interface describes execution context (ray)
-type Interface interface {
-	// GetID returns unique identifier of ray
-	GetID() string
+// New creates new root-level ray
+func New(emitterGenerator func() EventEmitter, rayIDGenerator func() string) Ray {
+	return &ray{
+		id: rayIDGenerator(),
 
-	// Args returns slice of arguments for event
-	Args() []Arg
+		bucket:       emptyBucketInstance,
+		EventEmitter: emitterGenerator(),
 
-	// Group returns clone of ray interface with some name applied
-	Group(string) Interface
+		genRayID:   rayIDGenerator,
+		getEmitter: emitterGenerator,
+	}
+}
 
-	// Emit method emits event into ray
-	Emit(...Event)
+type ray struct {
+	EventEmitter
+	id           string
+	logger       string
+	metricPrefix string
+	bucket       Bucket
+	genRayID     func() string
+	getEmitter   func() EventEmitter
+}
 
-	// On registers listeners of logging events
-	On(func(EmittedEvent))
+func (r *ray) GetRayID() string        { return r.id }
+func (r *ray) GetArguments() Bucket    { return r.bucket }
+func (r *ray) GetLogger() string       { return r.logger }
+func (r *ray) GetMetricPrefix() string { return r.metricPrefix }
+func (r *ray) WithLogger(v string) Ray {
+	c := r.clone()
+	c.logger = v
+	return c
+}
+func (r *ray) WithMetricPrefix(v string) Ray {
+	c := r.clone()
+	c.metricPrefix = v
+	return c
+}
+func (r *ray) With(args ...Arg) Ray {
+	if len(args) == 0 {
+		return r
+	}
 
-	// Creates new ray with new unique ID
-	Fork() Interface
+	c := r.clone()
+	c.bucket = AppendBucket(c.bucket, args...)
+	return c
+}
+func (r *ray) Fork() Ray {
+	c := r.clone()
+	c.id = c.genRayID()
+	c.EventEmitter = c.getEmitter()
+	c.EventEmitter.On(func(ee ...Event) {
+		r.EventEmitter.Emit(ee...)
+	})
+	return c
+}
+func (r *ray) clone() *ray {
+	return &ray{
+		EventEmitter: r.EventEmitter,
+		id:           r.id,
+		bucket:       r.bucket,
+		logger:       r.logger,
+		metricPrefix: r.metricPrefix,
+
+		genRayID:   r.genRayID,
+		getEmitter: r.getEmitter,
+	}
 }

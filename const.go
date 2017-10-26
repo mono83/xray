@@ -1,30 +1,38 @@
-package ray
+package xray
 
-// Predefined ray identifiers
+import "github.com/mono83/xray/id"
+
+// MetricType describes metric type
+type MetricType byte
+
+// Level describes logging level
+type Level byte
+
+// List of defined log levels
 const (
-	RootID = "ROOT"
-	BootID = "BOOT"
+	TRACE Level = iota
+	DEBUG
+	INFO
+	WARNING
+	ERROR
+	ALERT
+	CRITICAL
 )
 
-// ROOT ray. Other rays are forked from this one
-var ROOT Interface
+// List of defined metric types
+const (
+	INCREMENT MetricType = iota
+	GAUGE
+	DURATION
+)
 
-// BOOT ray. To be used during startup/shutdown process
-var BOOT Interface
+// ROOT is main top-level ray. Can be used to attach listeners
+var ROOT Ray
+
+// BOOT is ray used to log boot operations
+var BOOT Ray
 
 func init() {
-	// Building ROOT ray
-	rc := create(nil)
-	rc.id = RootID
-	rc.depth = 0
-	rc.name = RootID
-
-	ROOT = rc
-
-	// Building BOOT ray
-	bc := create(rc)
-	bc.id = BootID
-	bc.name = BootID
-
-	BOOT = bc
+	ROOT = New(NewSyncEmitter, id.Generator20Base64).WithLogger("ROOT")
+	BOOT = ROOT.Fork().WithLogger("BOOT")
 }
