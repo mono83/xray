@@ -15,7 +15,7 @@ func BenchmarkSyncEmitter_NoListeners1000(b *testing.B) {
 
 func BenchmarkSyncEmitter_OneListeners1000(b *testing.B) {
 	count := 0
-	listener := func(events ... Event) {
+	listener := func(events ...Event) {
 		count += len(events)
 	}
 
@@ -29,14 +29,14 @@ func BenchmarkSyncEmitter_OneListeners1000(b *testing.B) {
 		}
 	}
 
-	if b.N * 1000 != count {
+	if b.N*1000 != count {
 		b.Errorf("Expected %d but counted %d", b.N, count)
 	}
 }
 
 func BenchmarkSyncEmitter_TenListeners1000(b *testing.B) {
 	count := 0
-	listener := func(events ... Event) {
+	listener := func(events ...Event) {
 		count += len(events)
 	}
 
@@ -59,7 +59,7 @@ func BenchmarkSyncEmitter_TenListeners1000(b *testing.B) {
 		}
 	}
 
-	if b.N * 1000 * 10 != count {
+	if b.N*1000*10 != count {
 		b.Errorf("Expected %d but counted %d", b.N, count)
 	}
 }

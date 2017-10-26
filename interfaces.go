@@ -108,3 +108,11 @@ type MetricsEvent interface {
 	// GetValue return metrics value
 	GetValue() int64
 }
+
+// ByteDumpEvent used to provide dumps
+type ByteDumpEvent interface {
+	Event
+
+	GetSource() DumpSource
+	GetData() []byte
+}

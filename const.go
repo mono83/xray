@@ -8,6 +8,9 @@ type MetricType byte
 // Level describes logging level
 type Level byte
 
+// DumpSource describes dump source
+type DumpSource byte
+
 // List of defined log levels
 const (
 	TRACE Level = iota
@@ -24,6 +27,12 @@ const (
 	INCREMENT MetricType = iota
 	GAUGE
 	DURATION
+)
+
+// List of defined dump sources
+const (
+	IN DumpSource = iota
+	OUT
 )
 
 // ROOT is main top-level ray. Can be used to attach listeners
