@@ -1,9 +1,9 @@
 package std
 
 import (
-	"testing"
-	assert2 "github.com/stretchr/testify/assert"
 	"github.com/mono83/xray/args"
+	assert2 "github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestTimer(t *testing.T) {
