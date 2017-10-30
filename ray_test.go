@@ -1,8 +1,8 @@
 package xray
 
 import (
-	"testing"
 	"github.com/mono83/xray/args"
+	"testing"
 )
 
 // BenchmarkRay_Common_Pattern creates 5 level-depth rays and emits 10 events
@@ -22,7 +22,7 @@ func BenchmarkRay_Common_Pattern(b *testing.B) {
 	cntInfo := 0
 	cntError := 0
 	root.On(
-		func(events ... Event) {
+		func(events ...Event) {
 			for _, event := range events {
 				l, ok := event.(LogEvent)
 				if ok && l.GetLevel() == TRACE {
@@ -32,7 +32,7 @@ func BenchmarkRay_Common_Pattern(b *testing.B) {
 		},
 	)
 	root.On(
-		func(events ... Event) {
+		func(events ...Event) {
 			for _, event := range events {
 				l, ok := event.(LogEvent)
 				if ok && l.GetLevel() == DEBUG {
@@ -42,7 +42,7 @@ func BenchmarkRay_Common_Pattern(b *testing.B) {
 		},
 	)
 	root.On(
-		func(events ... Event) {
+		func(events ...Event) {
 			for _, event := range events {
 				l, ok := event.(LogEvent)
 				if ok && l.GetLevel() == INFO {
@@ -52,7 +52,7 @@ func BenchmarkRay_Common_Pattern(b *testing.B) {
 		},
 	)
 	root.On(
-		func(events ... Event) {
+		func(events ...Event) {
 			for _, event := range events {
 				l, ok := event.(LogEvent)
 				if ok && l.GetLevel() == ERROR {
@@ -64,7 +64,7 @@ func BenchmarkRay_Common_Pattern(b *testing.B) {
 
 	// Sending
 	b.ResetTimer()
-	for i := 0; i < b.N; i ++ {
+	for i := 0; i < b.N; i++ {
 		level5.Trace("This is trace :rayId")
 		level5.Trace("This is trace :rayId")
 		level5.Debug("This is debug :rayId")
@@ -77,13 +77,13 @@ func BenchmarkRay_Common_Pattern(b *testing.B) {
 		level5.Error("This is error :rayId")
 	}
 
-	if cntTrace != b.N * 2 {
+	if cntTrace != b.N*2 {
 		b.Fail()
 	}
-	if cntDebug != b.N * 4 {
+	if cntDebug != b.N*4 {
 		b.Fail()
 	}
-	if cntInfo != b.N * 3 {
+	if cntInfo != b.N*3 {
 		b.Fail()
 	}
 	if cntError != b.N {
