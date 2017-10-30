@@ -50,6 +50,18 @@ func (n Name) Value() string { return string(n) }
 // Scalar is ray.Arg interface implementation. Returns argument value as scalar
 func (n Name) Scalar() interface{} { return string(n) }
 
+// AppName is string argument with name "app"
+type AppName string
+
+// Name is ray.Arg interface implementation. Returns argument name
+func (a AppName) Name() string { return "app" }
+
+// Value is ray.Arg interface implementation. Returns argument value
+func (a AppName) Value() string { return string(a) }
+
+// Scalar is ray.Arg interface implementation. Returns argument value as scalar
+func (a AppName) Scalar() interface{} { return string(a) }
+
 // RayID is string argument with name "rayId"
 type RayID string
 
