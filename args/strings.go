@@ -26,6 +26,18 @@ func (s SQL) Value() string { return string(s) }
 // Scalar is ray.Arg interface implementation. Returns argument value as scalar
 func (s SQL) Scalar() interface{} { return string(s) }
 
+// Type is string argument with name "type"
+type Type string
+
+// Name is ray.Arg interface implementation. Returns argument name
+func (t Type) Name() string { return "type" }
+
+// Value is ray.Arg interface implementation. Returns argument value
+func (t Type) Value() string { return string(t) }
+
+// Scalar is ray.Arg interface implementation. Returns argument value as scalar
+func (t Type) Scalar() interface{} { return string(t) }
+
 // Name is string argument with name "name"
 type Name string
 
