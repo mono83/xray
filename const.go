@@ -1,6 +1,9 @@
 package xray
 
-import "github.com/mono83/xray/id"
+import (
+	"github.com/mono83/xray/id"
+	"github.com/mono83/xray/args"
+)
 
 // MetricType describes metric type
 type MetricType byte
@@ -42,6 +45,6 @@ var ROOT Ray
 var BOOT Ray
 
 func init() {
-	ROOT = New(NewSyncEmitter, id.Generator20Base64).WithLogger("ROOT")
+	ROOT = New(NewSyncEmitter, id.Generator20Base64).WithLogger("ROOT").With(args.Host(id.Hostname))
 	BOOT = ROOT.Fork().WithLogger("BOOT")
 }

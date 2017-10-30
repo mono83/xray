@@ -49,3 +49,27 @@ func (r RayID) Value() string { return string(r) }
 
 // Scalar is ray.Arg interface implementation. Returns argument value as scalar
 func (r RayID) Scalar() interface{} { return string(r) }
+
+// Host is string argument with name "host"
+type Host string
+
+// Name is ray.Arg interface implementation. Returns argument name
+func (h Host) Name() string { return "host" }
+
+// Value is ray.Arg interface implementation. Returns argument value
+func (h Host) Value() string { return string(h) }
+
+// Scalar is ray.Arg interface implementation. Returns argument value as scalar
+func (h Host) Scalar() interface{} { return string(h) }
+
+// URL is string argument with name "url"
+type URL string
+
+// Name is ray.Arg interface implementation. Returns argument name
+func (u URL) Name() string { return "url" }
+
+// Value is ray.Arg interface implementation. Returns argument value
+func (u URL) Value() string { return string(u) }
+
+// Scalar is ray.Arg interface implementation. Returns argument value as scalar
+func (u URL) Scalar() interface{} { return string(u) }

@@ -1,11 +1,14 @@
 package xray
 
+import "github.com/mono83/xray/args"
+
 // New creates new root-level ray
 func New(emitterGenerator func() EventEmitter, rayIDGenerator func() string) Ray {
+	rayID := rayIDGenerator()
 	return &ray{
-		id: rayIDGenerator(),
+		id: rayID,
 
-		bucket:       emptyBucketInstance,
+		bucket:       singleArgBucket{args.RayID(rayID)},
 		EventEmitter: emitterGenerator(),
 
 		genRayID:   rayIDGenerator,
@@ -53,6 +56,11 @@ func (r *ray) Fork() Ray {
 	c.EventEmitter.On(func(ee ...Event) {
 		r.EventEmitter.Emit(ee...)
 	})
+	if c.bucket.Size() < 2 {
+		c.bucket = singleArgBucket{args.RayID(c.id)}
+	} else {
+		c.bucket = AppendBucket(c.bucket, args.RayID(c.id))
+	}
 	return c
 }
 func (r *ray) clone() *ray {

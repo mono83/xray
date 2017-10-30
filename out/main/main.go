@@ -22,7 +22,7 @@ func main() {
 	// Sending all kinds of events
 	ray.Trace("This is :name message", args.Name("trace"))
 	ray.Debug("This is :name message", args.Name("debug"))
-	ray.Info("This is :name message", args.Name("info"))
+	ray.Info("This is :name message in ray :rayId", args.Name("info"))
 	ray.Warning("This is :name message", args.Name("warning"))
 	ray.Error("This is :name message", args.Name("error"))
 	ray.Alert("This is :name message", args.Name("alert"))
@@ -32,6 +32,11 @@ func main() {
 	// Sending dump information
 	ray.OutBytes([]byte("Hello, world"))
 	ray.InBytes([]byte("Received response"))
+
+	// Ray ID check
+	ray.Info("Send in own with :rayId")
+	xray.BOOT.Info("Send in BOOT with :rayId")
+	xray.ROOT.Info("Send in ROOT with :rayId")
 
 	time.Sleep(100 * time.Millisecond)
 }
