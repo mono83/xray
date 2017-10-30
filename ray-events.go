@@ -2,7 +2,6 @@ package xray
 
 import (
 	"github.com/mono83/xray/args"
-	"time"
 )
 
 func (r *ray) Pass(err error) error {
@@ -31,6 +30,6 @@ func (r *ray) Increment(key string, value int64, args ...Arg) {
 func (r *ray) Gauge(key string, value int64, args ...Arg) {
 	r.Emit(newMetricEvent(r, GAUGE, key, value, args))
 }
-func (r *ray) Duration(key string, value time.Duration, args ...Arg) {
+func (r *ray) Duration(key string, value NanoHolder, args ...Arg) {
 	r.Emit(newMetricEvent(r, DURATION, key, value.Nanoseconds(), args))
 }

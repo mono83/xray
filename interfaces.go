@@ -9,6 +9,12 @@ type Arg interface {
 	Scalar() interface{}
 }
 
+// NanoHolder is interface for structures, able to return nanoseconds-precision time duration
+// There are two common implementations: time.Duration and std.Timer
+type NanoHolder interface {
+	Nanoseconds() int64
+}
+
 // Bucket is container for arguments
 type Bucket interface {
 	// Size return number of args within bucket
@@ -38,7 +44,7 @@ type ExtendedEmitter interface {
 	Inc(string, ...Arg)
 	Increment(string, int64, ...Arg)
 	Gauge(string, int64, ...Arg)
-	Duration(string, time.Duration, ...Arg)
+	Duration(string, NanoHolder, ...Arg)
 
 	OutBytes([]byte, ...Arg)
 	InBytes([]byte, ...Arg)

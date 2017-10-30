@@ -1,8 +1,8 @@
 package xray
 
 import (
-	"github.com/mono83/xray/id"
 	"github.com/mono83/xray/args"
+	"github.com/mono83/xray/id"
 )
 
 // MetricType describes metric type
