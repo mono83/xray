@@ -9,8 +9,8 @@ import (
 )
 
 type sender struct {
-	target io.Writer
-	filter func([]xray.Arg) []xray.Arg
+	target    io.Writer
+	argFilter xray.ArgFilter
 }
 
 func (s sender) handle(events ...xray.Event) {
@@ -23,7 +23,7 @@ func (s sender) handle(events ...xray.Event) {
 		pkt := map[string]interface{}{}
 
 		if l.Size() > 0 {
-			for _, arg := range s.filter(l.Args()) {
+			for _, arg := range s.argFilter(l.Args()) {
 				pkt[arg.Name()] = arg.Scalar()
 			}
 		}

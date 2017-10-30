@@ -68,44 +68,10 @@ func (c Config) Raw() (xray.Handler, error) {
 		return nil, err
 	}
 
-	wl := map[string]bool{}
-	bl := map[string]bool{}
-
-	// Building black and whitelists
-	for _, v := range c.ArgsBlackList {
-		bl[v] = true
-	}
-	for _, v := range c.ArgsWhiteList {
-		wl[v] = true
-	}
-
-	var argFilter func([]xray.Arg) []xray.Arg
-	if len(wl) > 0 {
-		argFilter = func(args []xray.Arg) []xray.Arg {
-			response := []xray.Arg{}
-			for _, a := range args {
-				if _, ok := wl[a.Name()]; ok {
-					response = append(response, a)
-				}
-			}
-			return response
-		}
-	} else {
-		argFilter = func(args []xray.Arg) []xray.Arg {
-			response := []xray.Arg{}
-			for _, a := range args {
-				if _, ok := bl[a.Name()]; !ok {
-					response = append(response, a)
-				}
-			}
-			return response
-		}
-	}
-
 	// Building sender
 	send := &sender{
-		target: udpwriter.New(netAddr),
-		filter: argFilter,
+		target:    udpwriter.New(netAddr),
+		argFilter: xray.ArgFilterDoubleList(c.ArgsWhiteList, c.ArgsBlackList),
 	}
 
 	return send.handle, nil
