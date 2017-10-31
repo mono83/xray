@@ -49,20 +49,12 @@ func (c Config) Build() (xray.Handler, error) {
 		return nil, err
 	}
 
-	level := text.ParseLevel(c.MinLevel)
-
-	return out.Filter(
+	return out.FilterLogs(
 		out.Buffer(
 			hld,
 			time.Duration(c.Buffer)*time.Millisecond,
 		),
-		func(event xray.Event) bool {
-			if event == nil {
-				return false
-			}
-			l, ok := event.(xray.LogEvent)
-			return ok && l.GetLevel() >= level
-		},
+		text.ParseLevel(c.MinLevel),
 	), nil
 }
 

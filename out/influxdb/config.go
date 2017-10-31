@@ -76,17 +76,10 @@ func (c Config) Build() (xray.Handler, error) {
 		return nil, err
 	}
 
-	return out.Filter(
+	return out.FilterMetrics(
 		out.Buffer(
 			out.SplitterOne(send.one),
 			time.Duration(c.Buffer)*time.Millisecond,
 		),
-		func(event xray.Event) bool {
-			if event == nil {
-				return false
-			}
-			_, ok := event.(xray.MetricsEvent)
-			return ok
-		},
 	), nil
 }

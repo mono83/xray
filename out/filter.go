@@ -26,3 +26,26 @@ func Filter(target xray.Handler, predicate func(event xray.Event) bool) xray.Han
 		}
 	}
 }
+
+// FilterMetrics returns filtering adapter, that will forward to target only metric events
+func FilterMetrics(target xray.Handler) xray.Handler {
+	return Filter(target, func(event xray.Event) bool {
+		if event == nil {
+			return false
+		}
+		_, ok := event.(xray.MetricsEvent)
+		return ok
+	})
+}
+
+// FilterLogs returns filtering adapter, that will forward to target only log events with minimal
+// configured level
+func FilterLogs(target xray.Handler, level xray.Level) xray.Handler {
+	return Filter(target, func(event xray.Event) bool {
+		if event == nil {
+			return false
+		}
+		l, ok := event.(xray.LogEvent)
+		return ok && l.GetLevel() >= level
+	})
+}

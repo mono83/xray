@@ -8,13 +8,13 @@ import (
 
 // BufferOneSecond builds wrapper over events handler, that buffers all events it receives
 // and then flushes them every second
-func BufferOneSecond(target xray.Handler) func(...xray.Event) {
+func BufferOneSecond(target xray.Handler) xray.Handler {
 	return Buffer(target, time.Second)
 }
 
 // Buffer builds wrapper over events handler, that buffers all events it receives
 // and then flushes them on regular basis
-func Buffer(target xray.Handler, interval time.Duration) func(...xray.Event) {
+func Buffer(target xray.Handler, interval time.Duration) xray.Handler {
 	ch := &buffered{
 		interval: interval,
 		target:   target,
@@ -29,7 +29,7 @@ type buffered struct {
 	buffer []xray.Event
 
 	interval time.Duration
-	target   func(...xray.Event)
+	target   xray.Handler
 }
 
 // Flush method flushes events to target
