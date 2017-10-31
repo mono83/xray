@@ -29,3 +29,16 @@ func Splitter(target xray.Handler, size int) xray.Handler {
 		}
 	}
 }
+
+// SplitterOne returns handler, that will split incoming events one by one
+func SplitterOne(target func(xray.Event)) xray.Handler {
+	return func(events ...xray.Event) {
+		if l := len(events); l == 0 {
+			return
+		}
+
+		for _, event := range events {
+			target(event)
+		}
+	}
+}
