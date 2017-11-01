@@ -16,7 +16,10 @@ func Wrap(cmd *cobra.Command) *cobra.Command {
 		cmd.PersistentFlags().BoolP("verbose", "v", false, "Display info-level logging and higher")
 	}
 	if cmd.PersistentFlags().Lookup("vv") == nil {
-		cmd.PersistentFlags().Bool("vv", false, "Very verbose mode, trace and debug will be displayed")
+		cmd.PersistentFlags().Bool("vv", false, "Very verbose mode, debug will be displayed")
+	}
+	if cmd.PersistentFlags().Lookup("vvv") == nil {
+		cmd.PersistentFlags().Bool("vvv", false, "Extra verbose mode, trace and debug will be displayed")
 	}
 	if cmd.PersistentFlags().Lookup("quiet") == nil {
 		cmd.PersistentFlags().BoolP("quiet", "q", false, "Quiet mode, logging output will be suppressed")
@@ -27,13 +30,17 @@ func Wrap(cmd *cobra.Command) *cobra.Command {
 
 	cmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
 		vv, _ := cmd.Flags().GetBool("vv")
+		vvv, _ := cmd.Flags().GetBool("vvv")
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		quiet, _ := cmd.Flags().GetBool("quiet")
 		//nocolor, _ := cmd.Flags().GetBool("no-ansi") TODO
 		// Enabling logger
 		level := xray.ERROR
 		if !quiet {
-			if vv {
+			if vvv {
+				// Extra verbose mode
+				level = xray.TRACE
+			} else if vv {
 				// Very verbose mode
 				level = xray.DEBUG
 			} else if verbose {

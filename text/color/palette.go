@@ -2,6 +2,7 @@ package color
 
 import (
 	"github.com/mono83/xray"
+	"hash/fnv"
 )
 
 var colorTime = New(FgHiBlack)
@@ -14,6 +15,28 @@ var colorVarNormal = New(FgCyan)
 var colorVarHi = New(FgYellow)
 var colorBadge = New(BgRed, FgHiWhite, Bold)
 var colorDumpType = New(FgCyan)
+var colorLogger = New(FgHiBlack)
+
+var colorRayMarkers = []Color{
+	New(FgGreen),
+	New(FgHiGreen),
+	New(FgYellow),
+	New(FgHiYellow),
+	New(FgBlue),
+	New(FgHiBlue),
+	New(FgCyan),
+	New(FgHiCyan),
+	New(FgMagenta),
+	New(FgHiWhite),
+	New(FgRed),
+	New(FgHiRed),
+}
+
+func getRayColor(rayId string) Color {
+	h := fnv.New32a()
+	h.Write([]byte(rayId))
+	return colorRayMarkers[int(h.Sum32())%len(colorRayMarkers)]
+}
 
 func getMessageColor(level xray.Level) Color {
 	switch level {

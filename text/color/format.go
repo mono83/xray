@@ -5,6 +5,7 @@ import (
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/text"
 	"strconv"
+	"strings"
 )
 
 // FormatLogEvent performs colorful formatting of log event
@@ -18,10 +19,14 @@ func FormatLogEvent(e xray.Event) string {
 		return ""
 	}
 
+	loggerColor := getRayColor(l.GetLogger())
+	rayColor := getRayColor(l.GetRayID())
 	mainColor := getMessageColor(l.GetLevel())
 	varColorResolver := getVarColorResolver(l.GetLevel())
 
 	buf := bytes.NewBuffer(nil)
+	buf.WriteString(loggerColor.Sprint("▐"))
+	buf.WriteString(rayColor.Sprint("▌"))
 	buf.WriteString(colorTime.Sprint(text.TimeFormat(l.GetTime())))
 	buf.WriteRune(' ')
 	if l.GetLevel() == xray.ALERT {
@@ -35,6 +40,10 @@ func FormatLogEvent(e xray.Event) string {
 	buf.WriteString(mainColor.Sprint(text.Interpolate(l.GetMessage(), e, func(arg xray.Arg) string {
 		return varColorResolver(arg).Sprint(text.PlainInterpolator(arg)) + mainColor.Open()
 	})))
+	if logger := l.GetLogger(); len(logger) > 0 {
+		buf.WriteRune(' ')
+		buf.WriteString(colorLogger.Sprint("@" + strings.ToLower(logger)))
+	}
 
 	return buf.String()
 }
