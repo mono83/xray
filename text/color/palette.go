@@ -32,9 +32,9 @@ var colorRayMarkers = []Color{
 	New(FgHiRed),
 }
 
-func getRayColor(rayId string) Color {
+func getRayColor(rayID string) Color {
 	h := fnv.New32a()
-	h.Write([]byte(rayId))
+	h.Write([]byte(rayID))
 	return colorRayMarkers[int(h.Sum32())%len(colorRayMarkers)]
 }
 
