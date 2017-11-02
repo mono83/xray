@@ -6,6 +6,10 @@ import (
 	"regexp"
 )
 
+type listArg interface {
+	ValueList() []string
+}
+
 // placeholdersRegex contains rules to find placeholders inside string
 var placeholdersRegex = regexp.MustCompile(":[0-9a-zA-Z\\-_]+")
 
@@ -16,12 +20,24 @@ func Interpolate(source string, bucket xray.Bucket, format func(xray.Arg) string
 		return source
 	}
 
+	argCounter := map[string]int{}
+
 	return placeholdersRegex.ReplaceAllStringFunc(
 		source,
 		func(x string) string {
 			arg := bucket.Get(x[1:])
 			if arg == nil {
 				arg = args.Nil(x[1:])
+			}
+			argCounter[arg.Name()] = argCounter[arg.Name()] + 1
+			if lv, ok := arg.(listArg); ok {
+				index := argCounter[arg.Name()] - 1
+				values := lv.ValueList()
+				if index < len(values) {
+					arg = args.String{N: arg.Name(), V: values[index]}
+				} else {
+					arg = args.Nil(arg.Name())
+				}
 			}
 
 			return format(arg)

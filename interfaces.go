@@ -4,8 +4,11 @@ import "time"
 
 // Arg describes ray logging qualifier (argument)
 type Arg interface {
+	// Name returns argument key (name)
 	Name() string
+	// Value returns string representation of argument value
 	Value() string
+	// Scalar returns raw representation of argument value. It can be scalar value or slice of scalar values.
 	Scalar() interface{}
 }
 
