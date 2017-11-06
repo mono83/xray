@@ -36,8 +36,14 @@ func (r *ray) WithLogger(v string) Ray {
 	return c
 }
 func (r *ray) WithMetricPrefix(v string) Ray {
+	if v == "" {
+		return r
+	}
+	if v[len(v) - 1] != '.' {
+		v += "."
+	}
 	c := r.clone()
-	c.metricPrefix = v
+	c.metricPrefix = c.metricPrefix + v
 	return c
 }
 func (r *ray) With(args ...Arg) Ray {
