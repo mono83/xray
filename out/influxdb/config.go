@@ -5,6 +5,7 @@ import (
 	"github.com/mono83/udpwriter"
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/out"
+	"github.com/mono83/xray/out/agg/metrics"
 	"net"
 	"time"
 )
@@ -16,6 +17,7 @@ type Config struct {
 	Args          bool     `json:"args" yaml:"args" toml:"args"`
 	ArgsWhiteList []string `json:"argsWhiteList" yaml:"argsWhiteList" toml:"argsWhiteList"`
 	ArgsBlackList []string `json:"argsBlackList" yaml:"argsBlackList" toml:"argsBlackList"`
+	NotAggregated bool     `json:"notAggregated" yaml:"notAggregated" toml:"notAggregated"`
 }
 
 // Validate validates configuration contents
@@ -76,10 +78,21 @@ func (c Config) Build() (xray.Handler, error) {
 		return nil, err
 	}
 
+	if c.NotAggregated {
+		return out.FilterMetrics(
+			out.Buffer(
+				out.SplitterOne(send.one),
+				time.Duration(c.Buffer)*time.Millisecond,
+			),
+		), nil
+	}
+
 	return out.FilterMetrics(
-		out.Buffer(
-			out.SplitterOne(send.one),
+		metrics.NewBufferFunc(
 			time.Duration(c.Buffer)*time.Millisecond,
+			out.SplitterOne(send.one),
+			send.argFilter,
+			90, 95, 98,
 		),
 	), nil
 }

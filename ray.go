@@ -39,7 +39,7 @@ func (r *ray) WithMetricPrefix(v string) Ray {
 	if v == "" {
 		return r
 	}
-	if v[len(v) - 1] != '.' {
+	if v[len(v)-1] != '.' {
 		v += "."
 	}
 	c := r.clone()
