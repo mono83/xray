@@ -1,8 +1,6 @@
 package metrics
 
 import (
-	"sort"
-
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/std"
 	"strconv"
@@ -45,37 +43,30 @@ func (d deltaHolder) Flush(build func(string, string, xray.MetricType, int64) xr
 
 	events := []xray.Event{}
 	for key, values := range d.values {
-		var sum, min, max int64
-		count := int64(len(values))
-		for i, value := range values {
-			if i == 0 || value > max {
-				max = value
-			}
-			if i == 0 || value < min {
-				min = value
-			}
-			sum += value
-		}
+		slice := std.Int64Slice(values)
+		count, min, max, avg, sum := slice.Analyze()
 
 		events = append(
 			events,
-			build(key, ".count", xray.INCREMENT, count),
+			build(key, ".count", xray.INCREMENT, int64(count)),
 			build(key, ".min", xray.GAUGE, min),
 			build(key, ".max", xray.GAUGE, max),
 			build(key, ".sum", xray.GAUGE, sum),
-			build(key, ".avg", xray.GAUGE, sum/count),
+			build(key, ".avg", xray.GAUGE, avg),
 		)
 
 		if len(d.percentiles) > 0 {
-			sort.Sort(std.Int64Sorter(values))
+			slice.Sort()
 			for _, percentile := range d.percentiles {
-				i := len(values) * percentile / 100
-				events = append(events, build(key, ".perc_"+strconv.Itoa(percentile), xray.GAUGE, values[i]))
-				sum := int64(0)
-				for j := 0; j <= i; j++ {
-					sum += values[j]
+				value, sub := slice.Percentile(percentile)
+				sum := std.AggregateSum(sub)
+
+				events = append(events, build(key, ".perc_"+strconv.Itoa(percentile), xray.GAUGE, value))
+				if len(sub) > 0 {
+					events = append(events, build(key, ".mean_"+strconv.Itoa(percentile), xray.GAUGE, sum/int64(len(sub))))
+				} else {
+					events = append(events, build(key, ".mean_"+strconv.Itoa(percentile), xray.GAUGE, 0))
 				}
-				events = append(events, build(key, ".mean_"+strconv.Itoa(percentile), xray.GAUGE, sum/int64(i+1)))
 			}
 		}
 	}
