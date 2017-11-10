@@ -4,6 +4,7 @@ import (
 	"sort"
 
 	"github.com/mono83/xray"
+	"github.com/mono83/xray/std"
 	"strconv"
 )
 
@@ -66,7 +67,7 @@ func (d deltaHolder) Flush(build func(string, string, xray.MetricType, int64) xr
 		)
 
 		if len(d.percentiles) > 0 {
-			sort.Sort(int64Sorter(values))
+			sort.Sort(std.Int64Sorter(values))
 			for _, percentile := range d.percentiles {
 				i := len(values) * percentile / 100
 				events = append(events, build(key, ".perc_"+strconv.Itoa(percentile), xray.GAUGE, values[i]))
@@ -80,9 +81,3 @@ func (d deltaHolder) Flush(build func(string, string, xray.MetricType, int64) xr
 	}
 	return events
 }
-
-type int64Sorter []int64
-
-func (i int64Sorter) Len() int           { return len(i) }
-func (i int64Sorter) Swap(x, y int)      { i[x], i[y] = i[y], i[x] }
-func (i int64Sorter) Less(x, y int) bool { return i[x] < i[y] }
