@@ -29,6 +29,21 @@ func (i ID64) Value() string { return strconv.FormatInt(int64(i), 10) }
 // Scalar is ray.Arg interface implementation. Returns argument value as scalar
 func (i ID64) Scalar() interface{} { return int64(i) }
 
+// Int is common arg, that contain arbitrary int value
+type Int struct {
+	N string
+	V int
+}
+
+// Name is ray.Arg interface implementation. Returns argument name
+func (i Int) Name() string { return i.N }
+
+// Value is ray.Arg interface implementation. Returns argument value
+func (i Int) Value() string { return strconv.Itoa(i.V) }
+
+// Scalar is ray.Arg interface implementation. Returns argument value as scalar
+func (i Int) Scalar() interface{} { return i.V }
+
 // Count represents integer arg with name "count"
 type Count int
 
