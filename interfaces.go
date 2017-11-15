@@ -53,6 +53,7 @@ type ExtendedEmitter interface {
 	InBytes([]byte, ...Arg)
 
 	Pass(error) error
+	PassS(string, error) error
 
 	Trace(string, ...Arg)
 	Debug(string, ...Arg)

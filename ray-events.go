@@ -1,12 +1,26 @@
 package xray
 
 import (
+	"strings"
+
 	"github.com/mono83/xray/args"
 )
 
 func (r *ray) Pass(err error) error {
 	if err != nil {
 		r.Error("Error encountered - :err", args.Error{Err: err})
+	}
+
+	return err
+}
+
+func (r *ray) PassS(message string, err error) error {
+	if err != nil {
+		if strings.Contains(message, ":err") {
+			r.Error(message, args.Error{Err: err})
+		} else {
+			r.Error(message+" :err", args.Error{Err: err})
+		}
 	}
 
 	return err
