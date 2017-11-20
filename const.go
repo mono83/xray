@@ -44,6 +44,16 @@ var ROOT Ray
 // BOOT is ray used to log boot operations
 var BOOT Ray
 
+// OrRoot checks if candidate is nil.
+// Returns candidate itself or ROOT ray if candidate is nil.
+func OrRoot(candidate Ray) Ray {
+	if candidate == nil {
+		return ROOT
+	}
+
+	return candidate
+}
+
 func init() {
 	ROOT = New(NewSyncEmitter, id.Generator20Base64).WithLogger("ROOT").With(args.Host(id.Hostname))
 	BOOT = ROOT.Fork().WithLogger("BOOT")
