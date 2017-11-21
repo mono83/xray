@@ -1,4 +1,4 @@
-package cobralog
+package xcobra
 
 import (
 	"github.com/mono83/xray"
