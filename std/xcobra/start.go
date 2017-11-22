@@ -11,11 +11,13 @@ import (
 
 // Start starts application command
 func Start(cmd *cobra.Command) {
-	if err := Wrap(cmd).Execute(); err != nil {
-		xray.ROOT.Alert("Application done with error :err", args.Error{Err: err})
-		os.Exit(1)
-	}
+	err := Wrap(cmd).Execute()
 
 	// Log delivery timeout
 	time.Sleep(100 * time.Millisecond)
+
+	if err != nil {
+		xray.ROOT.Alert("Application done with error :err", args.Error{Err: err})
+		os.Exit(1)
+	}
 }
