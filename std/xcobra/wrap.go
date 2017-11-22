@@ -34,21 +34,23 @@ func Wrap(cmd *cobra.Command) *cobra.Command {
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		quiet, _ := cmd.Flags().GetBool("quiet")
 		//nocolor, _ := cmd.Flags().GetBool("no-ansi") TODO
+
 		// Enabling logger
-		level := xray.ERROR
 		if !quiet {
 			if vvv {
 				// Extra verbose mode
-				level = xray.TRACE
+				xray.ROOT.On(os.StdOutLogger(xray.TRACE))
 			} else if vv {
 				// Very verbose mode
-				level = xray.DEBUG
+				xray.ROOT.On(os.StdOutLogger(xray.DEBUG))
 			} else if verbose {
 				// Info+ logging
-				level = xray.INFO
+				xray.ROOT.On(os.StdOutLogger(xray.INFO))
+			} else {
+				// Default logging - warning & higher + logs from BOOT and ROOT
+				xray.ROOT.On(os.StdOutDefaultLogger())
 			}
 
-			xray.ROOT.On(os.StdOutLogger(level))
 		}
 	}
 
