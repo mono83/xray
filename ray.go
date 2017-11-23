@@ -69,6 +69,15 @@ func (r *ray) Fork() Ray {
 	}
 	return c
 }
+func (r *ray) WithRayID(rayID string) Ray {
+	if r.id == rayID {
+		return r
+	}
+
+	c := r.clone()
+	c.id = rayID
+	return c
+}
 func (r *ray) clone() *ray {
 	return &ray{
 		EventEmitter: r.EventEmitter,

@@ -83,6 +83,9 @@ type Ray interface {
 	// GetArguments returns full container with arguments
 	GetArguments() Bucket
 
+	// WithRayID return clone of ray with custom RayID
+	WithRayID(string) Ray
+
 	// WithLogger returns clone of ray interface with some name applied
 	WithLogger(string) Ray
 
