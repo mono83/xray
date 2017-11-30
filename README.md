@@ -97,7 +97,8 @@ There are also special arguments, that wrap slices
 
 And even more special arguments, that are instantiated by default and located in `github.com/mono83/args/env`
 
-| Argument | Instance | Name | Scalar | Description |
-| --- | --- | --- | --- | --- |
-| `env.ArgPID` | `env.PID` | `"pid"` | `int` | Contains process ID (pid) of current application |
-| `env.ArgHostName` | `env.HostName` | `"hostname"` | `"string"` | Contains host name of machine, this application running on
+|      Argument       |     Instance     |     Name     |  Scalar  | Description |
+| ------------------- | ---------------- | ------------ | -------- | ----------- |
+| `env.ArgPID` 	      | `env.PID`        | `"pid"`      | `int`    | Contains process ID (pid) of current application |
+| `env.ArgHostName`   | `env.HostName`   | `"hostname"` | `string` | Contains host name of machine, this application running on
+| `env.ArgSystemUser` | `env.SystemUser` | `"username"` | `string` | Contain information of user, invoked application

@@ -12,7 +12,7 @@ type ArgHostName string
 func (a ArgHostName) String() string { return string(a) }
 
 // Name returns argument key (name)
-func (a ArgHostName) Name() string { return "hostname" }
+func (ArgHostName) Name() string { return "hostname" }
 
 // Value returns string representation of argument value
 func (a ArgHostName) Value() string { return string(a) }
