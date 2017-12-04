@@ -40,7 +40,7 @@ func StdOutDefaultLogger() xray.Handler {
 		),
 		func(e xray.Event) bool {
 			l, ok := e.(xray.LogEvent)
-			return ok && (l.GetLevel() >= xray.WARNING || l.GetLogger() == "ROOT" || l.GetLogger() == "BOOT")
+			return ok && (l.GetLevel() >= xray.WARNING || (l.GetLevel() >= xray.INFO && (l.GetLogger() == "ROOT" || l.GetLogger() == "BOOT")))
 		},
 	)
 }
