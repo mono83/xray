@@ -18,6 +18,9 @@ func Wrap(cmd *cobra.Command) *cobra.Command {
 	if cmd.PersistentFlags().Lookup("vv") == nil {
 		cmd.PersistentFlags().Bool("vv", false, "Very verbose mode, debug will be displayed")
 	}
+	if cmd.PersistentFlags().Lookup("vd") == nil {
+		cmd.PersistentFlags().Bool("vd", false, "Verbose dump mode, will dump packet contents, if app supports it")
+	}
 	if cmd.PersistentFlags().Lookup("vvv") == nil {
 		cmd.PersistentFlags().Bool("vvv", false, "Extra verbose mode, trace and debug will be displayed")
 	}
@@ -30,6 +33,7 @@ func Wrap(cmd *cobra.Command) *cobra.Command {
 
 	cmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
 		vv, _ := cmd.Flags().GetBool("vv")
+		vd, _ := cmd.Flags().GetBool("vd")
 		vvv, _ := cmd.Flags().GetBool("vvv")
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		quiet, _ := cmd.Flags().GetBool("quiet")
@@ -50,7 +54,10 @@ func Wrap(cmd *cobra.Command) *cobra.Command {
 				// Default logging - warning & higher + logs from BOOT and ROOT
 				xray.ROOT.On(os.StdOutDefaultLogger())
 			}
-
+			if vd {
+				// Packet dump mode
+				xray.ROOT.On(os.StdOutDumper())
+			}
 		}
 	}
 
