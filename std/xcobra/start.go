@@ -10,8 +10,16 @@ import (
 )
 
 // Start starts application command
-func Start(cmd *cobra.Command) {
-	err := Wrap(cmd).Execute()
+func Start(cmd *cobra.Command, postWrapperCallbacks ...func(*cobra.Command)) {
+	c := Wrap(cmd)
+
+	if len(postWrapperCallbacks) > 0 {
+		for _, clb := range postWrapperCallbacks {
+			clb(c)
+		}
+	}
+
+	err := c.Execute()
 	code := 0
 
 	if err != nil {
