@@ -11,7 +11,7 @@ import (
 
 var generator20Mutex sync.Mutex
 var generator20Inc int64
-var generator20Rng *rand.Rand = rand.New(rand.NewSource(time.Now().Unix()))
+var generator20Rng = rand.New(rand.NewSource(time.Now().Unix()))
 
 // Generator20Base64 always produces 20-bytes ray IDs but be aware of special symbols + and /
 func Generator20Base64() string {
