@@ -30,6 +30,9 @@ func Wrap(cmd *cobra.Command) *cobra.Command {
 	if cmd.PersistentFlags().Lookup("no-ansi") == nil {
 		cmd.PersistentFlags().Bool("no-ansi", false, "Disable ANSI coloring for logs")
 	}
+	if cmd.PersistentFlags().Lookup("stderr") == nil {
+		cmd.PersistentFlags().Bool("stderr", false, "Use STDERR instead of STDOUT for logging")
+	}
 
 	cmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
 		vv, _ := cmd.Flags().GetBool("vv")
@@ -37,26 +40,27 @@ func Wrap(cmd *cobra.Command) *cobra.Command {
 		vvv, _ := cmd.Flags().GetBool("vvv")
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		quiet, _ := cmd.Flags().GetBool("quiet")
-		//nocolor, _ := cmd.Flags().GetBool("no-ansi") TODO
+		noColor, _ := cmd.Flags().GetBool("no-ansi")
+		useStderr, _ := cmd.Flags().GetBool("stderr")
 
 		// Enabling logger
 		if !quiet {
 			if vvv {
 				// Extra verbose mode
-				xray.ROOT.On(os.StdOutLogger(xray.TRACE))
+				xray.ROOT.On(os.StdOutLoggerX(xray.TRACE, !noColor, useStderr))
 			} else if vv {
 				// Very verbose mode
-				xray.ROOT.On(os.StdOutLogger(xray.DEBUG))
+				xray.ROOT.On(os.StdOutLoggerX(xray.DEBUG, !noColor, useStderr))
 			} else if verbose {
 				// Info+ logging
-				xray.ROOT.On(os.StdOutLogger(xray.INFO))
+				xray.ROOT.On(os.StdOutLoggerX(xray.INFO, !noColor, useStderr))
 			} else {
 				// Default logging - warning & higher + logs from BOOT and ROOT
-				xray.ROOT.On(os.StdOutDefaultLogger())
+				xray.ROOT.On(os.StdOutDefaultLoggerX(!noColor, useStderr))
 			}
 			if vd {
 				// Packet dump mode
-				xray.ROOT.On(os.StdOutDumper())
+				xray.ROOT.On(os.StdOutDumperX(!noColor, useStderr))
 			}
 		}
 	}
