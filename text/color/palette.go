@@ -13,7 +13,8 @@ var colorError = New(FgRed)
 var colorVarLow = New(FgHiBlack, Underline)
 var colorVarNormal = New(FgCyan)
 var colorVarHi = New(FgYellow)
-var colorBadge = New(BgRed, FgHiWhite, Bold)
+var colorBadgeAlert = New(BgRed, FgHiWhite, Bold)
+var colorBadgeCrit = New(BgHiMagenta, FgHiWhite, Bold)
 var colorDumpType = New(FgCyan)
 var colorLogger = New(FgHiBlack)
 
@@ -34,7 +35,7 @@ var colorRayMarkers = []Color{
 
 func getRayColor(rayID string) Color {
 	h := fnv.New32a()
-	h.Write([]byte(rayID))
+	_, _ = h.Write([]byte(rayID))
 	return colorRayMarkers[int(h.Sum32())%len(colorRayMarkers)]
 }
 

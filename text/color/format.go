@@ -30,11 +30,11 @@ func FormatLogEvent(e xray.Event) string {
 	buf.WriteString(colorTime.Sprint(text.TimeFormat(l.GetTime())))
 	buf.WriteRune(' ')
 	if l.GetLevel() == xray.ALERT {
-		buf.WriteString(colorBadge.Sprint(" ALERT "))
+		buf.WriteString(colorBadgeAlert.Sprint(" ALRT "))
 		buf.WriteRune(' ')
 	}
 	if l.GetLevel() == xray.CRITICAL {
-		buf.WriteString(colorBadge.Sprint(" CRIT "))
+		buf.WriteString(colorBadgeCrit.Sprint(" CRIT "))
 		buf.WriteRune(' ')
 	}
 	buf.WriteString(mainColor.Sprint(text.Interpolate(l.GetMessage(), e, func(arg xray.Arg) string {
