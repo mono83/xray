@@ -109,3 +109,15 @@ func (a Addr) Value() string { return string(a) }
 
 // Scalar is ray.Arg interface implementation. Returns argument value as scalar
 func (a Addr) Scalar() interface{} { return string(a) }
+
+// Method is string argument with name "method"
+type Method string
+
+// Name is ray.Arg interface implementation. Returns argument name
+func (m Method) Name() string { return "method" }
+
+// Value is ray.Arg interface implementation. Returns argument value
+func (m Method) Value() string { return string(m) }
+
+// Scalar is ray.Arg interface implementation. Returns argument value as scalar
+func (m Method) Scalar() interface{} { return string(m) }
