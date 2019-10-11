@@ -97,3 +97,15 @@ func (u URL) Value() string { return string(u) }
 
 // Scalar is ray.Arg interface implementation. Returns argument value as scalar
 func (u URL) Scalar() interface{} { return string(u) }
+
+// Addr is string argument with name "addr"
+type Addr string
+
+// Name is ray.Arg interface implementation. Returns argument name
+func (a Addr) Name() string { return "addr" }
+
+// Value is ray.Arg interface implementation. Returns argument value
+func (a Addr) Value() string { return string(a) }
+
+// Scalar is ray.Arg interface implementation. Returns argument value as scalar
+func (a Addr) Scalar() interface{} { return string(a) }
