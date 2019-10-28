@@ -12,17 +12,14 @@ import (
 
 // Do performs HTTP request
 func Do(ray xray.Ray, client *http.Client, req *http.Request) (*http.Response, error) {
-	if ray == nil {
-		ray = xray.ROOT.Fork().WithLogger("http")
-	}
+	ray = xray.Wrap(ray, "http").With(args.URL(req.URL.String()))
 	if req == nil {
 		return nil, errors.New("empty request")
 	}
 	if client == nil {
+		ray.Trace("New HTTP client initialized")
 		client = &http.Client{}
 	}
-
-	ray = ray.With(args.URL(req.URL.String()))
 
 	ray.Debug("Sending request to :url")
 	before := time.Now()
@@ -44,9 +41,7 @@ func Do(ray xray.Ray, client *http.Client, req *http.Request) (*http.Response, e
 
 // DoRead performs HTTP request and reads response body
 func DoRead(ray xray.Ray, client *http.Client, req *http.Request) (code int, body []byte, headers http.Header, cookies []*http.Cookie, err error) {
-	if ray == nil {
-		ray = xray.ROOT.Fork().WithLogger("http")
-	}
+	ray = xray.Wrap(ray, "http").With(args.URL(req.URL.String()))
 
 	resp, err := Do(ray, client, req)
 	if err != nil {
