@@ -2,7 +2,6 @@ package xcobra
 
 import (
 	"os"
-	"time"
 
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/args"
@@ -27,8 +26,8 @@ func Start(cmd *cobra.Command, postWrapperCallbacks ...func(*cobra.Command)) {
 		code = 1
 	}
 
-	// Log delivery timeout
-	time.Sleep(100 * time.Millisecond)
+	// Wait log delivery
+	xray.Waiter.Wait()
 
 	os.Exit(code)
 }

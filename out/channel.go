@@ -22,10 +22,12 @@ type channeled struct {
 func (c *channeled) wait() {
 	for event := range c.ch {
 		c.target(event)
+		xray.Waiter.Done()
 	}
 }
 
 func (c *channeled) receive(events ...xray.Event) {
+	xray.Waiter.Add(len(events))
 	for _, e := range events {
 		c.ch <- e
 	}

@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"time"
 
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/args"
@@ -54,7 +53,8 @@ func main() {
 	// inter-service constistent logging
 	withCustom := forked.WithRayID("http-request-123456")
 	withCustom.Info("I have RayID :rayId")
+	withCustom.Info("This is last one")
 
 	// Waiting until all output is done
-	time.Sleep(time.Millisecond * 50)
+	xray.Waiter.Wait()
 }
