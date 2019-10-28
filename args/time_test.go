@@ -1,9 +1,10 @@
 package args
 
 import (
-	"github.com/magiconair/properties/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var durationDataProvider = []struct {
@@ -22,8 +23,8 @@ var durationDataProvider = []struct {
 func TestDurationFormatting(t *testing.T) {
 	for _, data := range durationDataProvider {
 		t.Run(data.expected, func(t *testing.T) {
-			assert.Equal(t, Delta(data.given).Value(), data.expected)
-			assert.Equal(t, Elapsed(data.given).Value(), data.expected)
+			assert.Equal(t, data.expected, Delta(data.given).Value())
+			assert.Equal(t, data.expected, Elapsed(data.given).Value())
 		})
 	}
 }
