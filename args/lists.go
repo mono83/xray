@@ -8,10 +8,10 @@ import (
 // ID64List contains multiple IDs
 type ID64List []int64
 
-// Name is ray.Arg interface implementation. Returns argument name
+// Name is xray.Arg interface implementation. Returns argument name
 func (i ID64List) Name() string { return "id" }
 
-// Value is ray.Arg interface implementation. Returns argument value
+// Value is xray.Arg interface implementation. Returns argument value
 func (i ID64List) Value() string {
 	return strings.Join(i.ValueList(), ",")
 }
@@ -33,16 +33,16 @@ func (i ID64List) ValueList() []string {
 	return str
 }
 
-// Scalar is ray.Arg interface implementation. Returns argument value as slice
+// Scalar is xray.Arg interface implementation. Returns argument value as slice
 func (i ID64List) Scalar() interface{} { return []int64(i) }
 
 // NameList contains multiple names
 type NameList []string
 
-// Name is ray.Arg interface implementation. Returns argument name
+// Name is xray.Arg interface implementation. Returns argument name
 func (n NameList) Name() string { return "name" }
 
-// Value is ray.Arg interface implementation. Returns argument value
+// Value is xray.Arg interface implementation. Returns argument value
 func (n NameList) Value() string {
 	return strings.Join(n, ",")
 }
@@ -52,16 +52,16 @@ func (n NameList) ValueList() []string {
 	return []string(n)
 }
 
-// Scalar is ray.Arg interface implementation. Returns argument value as slice
+// Scalar is xray.Arg interface implementation. Returns argument value as slice
 func (n NameList) Scalar() interface{} { return []string(n) }
 
 // TypeList contains multiple types
 type TypeList []string
 
-// Name is ray.Arg interface implementation. Returns argument name
+// Name is xray.Arg interface implementation. Returns argument name
 func (t TypeList) Name() string { return "type" }
 
-// Value is ray.Arg interface implementation. Returns argument value
+// Value is xray.Arg interface implementation. Returns argument value
 func (t TypeList) Value() string {
 	return strings.Join(t, ",")
 }
@@ -71,5 +71,5 @@ func (t TypeList) ValueList() []string {
 	return []string(t)
 }
 
-// Scalar is ray.Arg interface implementation. Returns argument value as slice
+// Scalar is xray.Arg interface implementation. Returns argument value as slice
 func (t TypeList) Scalar() interface{} { return []string(t) }
