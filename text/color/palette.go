@@ -1,8 +1,9 @@
 package color
 
 import (
-	"github.com/mono83/xray"
 	"hash/fnv"
+
+	"github.com/mono83/xray"
 )
 
 var colorTime = New(FgHiBlack)

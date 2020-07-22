@@ -1,8 +1,9 @@
 package text
 
 import (
-	"github.com/mono83/xray"
 	"strings"
+
+	"github.com/mono83/xray"
 )
 
 var sanitizeReplacement = byte('_')

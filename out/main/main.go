@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/fatih/color"
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/args"
 	"github.com/mono83/xray/out/os"
-	"time"
 )
 
 func main() {

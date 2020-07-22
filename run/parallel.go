@@ -1,8 +1,9 @@
 package run
 
 import (
-	"github.com/mono83/xray"
 	"sync"
+
+	"github.com/mono83/xray"
 )
 
 // Parallel method wraps multiple multiple runnables into one

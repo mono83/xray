@@ -2,9 +2,10 @@ package statsd
 
 import (
 	"bytes"
+	"strconv"
+
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/text"
-	"strconv"
 )
 
 // NewBuffer builds and returns buffer, used to write metrics event is StatsD format

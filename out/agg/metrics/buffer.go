@@ -2,9 +2,9 @@ package metrics
 
 import (
 	"sync"
+	"time"
 
 	"github.com/mono83/xray"
-	"time"
 )
 
 // NewBuffer builds and returns new metrics buffer

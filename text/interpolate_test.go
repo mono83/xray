@@ -1,10 +1,11 @@
 package text
 
 import (
+	"testing"
+
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/args"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestInterpolatePlainText(t *testing.T) {

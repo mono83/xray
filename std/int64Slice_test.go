@@ -1,9 +1,10 @@
 package std
 
 import (
-	"github.com/stretchr/testify/assert"
 	"sort"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestInt64Sorter(t *testing.T) {

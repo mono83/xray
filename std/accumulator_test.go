@@ -1,8 +1,9 @@
 package std
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAccumulatorInt64(t *testing.T) {

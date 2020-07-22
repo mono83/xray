@@ -1,8 +1,9 @@
 package std
 
 import (
-	"github.com/mono83/xray"
 	"time"
+
+	"github.com/mono83/xray"
 )
 
 // TimeHelper is helper structure, used to measure elapsed time with automatic data forwarding
