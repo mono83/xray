@@ -1,9 +1,10 @@
 package metrics
 
 import (
+	"strconv"
+
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/std"
-	"strconv"
 )
 
 // NewDeltaHolder builds and returns grouping buffer for duration values

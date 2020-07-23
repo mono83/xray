@@ -1,9 +1,10 @@
 package mon
 
 import (
-	"github.com/mono83/xray"
 	"runtime"
 	"time"
+
+	"github.com/mono83/xray"
 )
 
 // StartHealthMonitor starts health monitoring thread, that will send runtime metrics

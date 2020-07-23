@@ -1,12 +1,13 @@
 package run
 
 import (
-	"github.com/mono83/xray"
-	"github.com/mono83/xray/args"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/mono83/xray"
+	"github.com/mono83/xray/args"
 )
 
 // Loop is infinite loop

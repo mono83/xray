@@ -102,3 +102,39 @@ And even more special arguments, that are instantiated by default and located in
 | `env.ArgPID` 	      | `env.PID`        | `"pid"`      | `int`    | Contains process ID (pid) of current application |
 | `env.ArgHostName`   | `env.HostName`   | `"hostname"` | `string` | Contains host name of machine, this application running on
 | `env.ArgSystemUser` | `env.SystemUser` | `"username"` | `string` | Contain information of user, invoked application
+
+## Prometheus exporter
+
+Xray is bundled with data exporter, compatible with Prometheus. To enable, attach it to `xray.ROOT` or other ray:
+
+```go
+import "github.com/mono83/xray/out/prometheus"
+
+// Declaring exporter
+prom := prometheus.NewExporter(
+        nil, // Metrics arguments filtering func
+        nil, // Default arguments to inject
+        time.Millisecond, // Time buckets for latency histograms...
+        10 * time.Millisecond,
+        50 * time.Millisecond,
+        100 * time.Millisecond,
+        250 * time.Millisecons,
+        500 * time.Millisecond, 
+        time.Second,
+        10 * time.Second,
+)
+
+// Registering on ROOT ray
+xray.ROOT.On(prom.Handle)
+
+// Starting HTTP server, that will return metrics on any URL
+panic(http.ListenAndServe(":5557", prom))
+```
+
+In addition to served metrics, this exporter also sends its own to diagnose performance issues:
+
+* `prometheus_exporter_handled` - amount of handled metrics events, counter.
+* `prometheus_exporter_render` - amount of render requests, counter. `type="writer"` stands for any writer invocation,
+  `type="http"` shows only HTTP rendering requests.
+* `prometheus_exporter_size` - amount of items in exporter, gauge. `type="gauges"` calculates only gauges,
+  `type="counters"` is for counters and `type="histogram"` is for histograms.  

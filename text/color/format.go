@@ -2,10 +2,11 @@ package color
 
 import (
 	"bytes"
-	"github.com/mono83/xray"
-	"github.com/mono83/xray/text"
 	"strconv"
 	"strings"
+
+	"github.com/mono83/xray"
+	"github.com/mono83/xray/text"
 )
 
 // FormatLogEvent performs colorful formatting of log event

@@ -1,9 +1,10 @@
 package xray
 
 import (
+	"testing"
+
 	"github.com/mono83/xray/args"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestGroupingKeyArgs(t *testing.T) {

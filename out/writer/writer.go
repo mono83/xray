@@ -2,8 +2,9 @@ package writer
 
 import (
 	"fmt"
-	"github.com/mono83/xray"
 	"io"
+
+	"github.com/mono83/xray"
 )
 
 // New builds new events handler, used to print to arbitrary writer

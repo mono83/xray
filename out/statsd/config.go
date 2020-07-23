@@ -2,11 +2,12 @@ package statsd
 
 import (
 	"errors"
+	"net"
+	"time"
+
 	"github.com/mono83/udpwriter"
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/out"
-	"net"
-	"time"
 )
 
 // Config holds configuration for StatsD client

@@ -1,9 +1,10 @@
 package out
 
 import (
-	"github.com/mono83/xray"
 	"sync"
 	"time"
+
+	"github.com/mono83/xray"
 )
 
 // BufferOneSecond builds wrapper over events handler, that buffers all events it receives

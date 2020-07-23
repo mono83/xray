@@ -1,8 +1,9 @@
 package statsd
 
 import (
-	"github.com/mono83/xray"
 	"io"
+
+	"github.com/mono83/xray"
 )
 
 type sender struct {

@@ -1,8 +1,9 @@
 package xray
 
 import (
-	"github.com/mono83/xray/args"
 	"testing"
+
+	"github.com/mono83/xray/args"
 )
 
 // BenchmarkRay_Common_Pattern creates 5 level-depth rays and emits 10 events

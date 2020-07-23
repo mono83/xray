@@ -1,8 +1,9 @@
 package run
 
 import (
-	"github.com/mono83/xray"
 	"time"
+
+	"github.com/mono83/xray"
 )
 
 // Schedule wraps runnable into another one, which will be invoked at requested rate

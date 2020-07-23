@@ -2,12 +2,13 @@ package logstash
 
 import (
 	"errors"
+	"net"
+	"time"
+
 	"github.com/mono83/udpwriter"
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/out"
 	"github.com/mono83/xray/text"
-	"net"
-	"time"
 )
 
 // Config holds information for filtered receiver

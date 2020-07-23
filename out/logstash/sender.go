@@ -2,10 +2,11 @@ package logstash
 
 import (
 	"encoding/json"
-	"github.com/mono83/xray"
-	"github.com/mono83/xray/text"
 	"io"
 	"time"
+
+	"github.com/mono83/xray"
+	"github.com/mono83/xray/text"
 )
 
 type sender struct {

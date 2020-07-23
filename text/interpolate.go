@@ -1,9 +1,10 @@
 package text
 
 import (
+	"regexp"
+
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/args"
-	"regexp"
 )
 
 type listArg interface {

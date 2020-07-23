@@ -1,9 +1,10 @@
 package metrics
 
 import (
+	"testing"
+
 	"github.com/mono83/xray"
 	assert2 "github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestGaugeHolder(t *testing.T) {

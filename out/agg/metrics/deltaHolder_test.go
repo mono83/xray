@@ -2,9 +2,10 @@ package metrics
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/mono83/xray"
 	assert2 "github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestDeltaHolder(t *testing.T) {

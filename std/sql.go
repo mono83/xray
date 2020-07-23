@@ -1,10 +1,11 @@
 package std
 
 import (
-	"github.com/mono83/xray"
-	"github.com/mono83/xray/args"
 	"strings"
 	"time"
+
+	"github.com/mono83/xray"
+	"github.com/mono83/xray/args"
 )
 
 // queryType function attempts to recognize SQL query type

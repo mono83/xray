@@ -54,6 +54,16 @@ func OrRoot(candidate Ray) Ray {
 	return candidate
 }
 
+// OrFootFork checks if candidate is nil.
+// Returns candidate itself or ROOT ray fork if candidate is nil.
+func OrFootFork(candidate Ray) Ray {
+	if candidate == nil {
+		return ROOT.Fork()
+	}
+
+	return candidate
+}
+
 func init() {
 	ROOT = New(NewSyncEmitter, id.Generator20Base64).WithLogger("ROOT").With(args.Host(id.Hostname))
 	BOOT = ROOT.Fork().WithLogger("BOOT")
