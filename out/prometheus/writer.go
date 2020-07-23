@@ -3,6 +3,7 @@ package prometheus
 import (
 	"errors"
 	"fmt"
+	"github.com/mono83/xray/args"
 	"io"
 	"regexp"
 	"sort"
@@ -12,24 +13,26 @@ import (
 )
 
 var (
-	pType    = []byte("# TYPE ")
-	pGauge   = []byte(" gauge\n")
-	pCounter = []byte(" counter\n")
-	pStart   = []byte("{")
-	pEnd     = []byte("}")
-	pSpace   = []byte(" ")
-	pLe      = []byte("le=\"")
-	pInf     = []byte("+Inf")
-	pQuote   = []byte("\"")
-	pEqQuote = []byte("=\"")
-	pComma   = []byte(",")
-	pNl      = []byte("\n")
+	pType      = []byte("# TYPE ")
+	pGauge     = []byte(" gauge\n")
+	pCounter   = []byte(" counter\n")
+	pHistogram = []byte(" histogram\n")
+	pStart     = []byte("{")
+	pEnd       = []byte("}")
+	pSpace     = []byte(" ")
+	pLe        = []byte("le=\"")
+	pInf       = []byte("+Inf")
+	pQuote     = []byte("\"")
+	pEqQuote   = []byte("=\"")
+	pComma     = []byte(",")
+	pNl        = []byte("\n")
 
 	notAllowedRegex = regexp.MustCompile(`[^a-zA-Z0-9_:]`)
 )
 
 // Write outputs contents of exporter into given Writer in prometheus format
 func (e *Exporter) Write(w io.Writer) error {
+	e.cntWritten++
 	if w == nil {
 		return errors.New("empty writer")
 	}
@@ -59,6 +62,20 @@ func (e *Exporter) Write(w io.Writer) error {
 	}
 	e.mutex.Unlock()
 
+	// Injecting own metrics
+	counters = append(
+		counters,
+		value{value: e.cntHandled, name: "prometheus_exporter_handled"},
+		value{value: e.cntWritten, name: "prometheus_exporter_render", args: []xray.Arg{args.Type("writer")}},
+		value{value: e.cntHTTP, name: "prometheus_exporter_render", args: []xray.Arg{args.Type("http")}},
+	)
+	gauges = append(
+		gauges,
+		value{value: int64(len(e.gauges)), name: "prometheus_exporter_size", args: []xray.Arg{args.Type("gauges")}},
+		value{value: int64(len(e.counters)), name: "prometheus_exporter_size", args: []xray.Arg{args.Type("counters")}},
+		value{value: int64(len(e.histogram)), name: "prometheus_exporter_size", args: []xray.Arg{args.Type("histogram")}},
+	)
+
 	// Sorting in alphabetical order
 	sort.Slice(counters, func(i, j int) bool {
 		return counters[i].name < counters[j].name
@@ -84,6 +101,64 @@ func (e *Exporter) Write(w io.Writer) error {
 		}
 	}
 
+	// Printing histograms
+	for _, v := range histogram {
+		if _, err := w.Write(pType); err != nil {
+			return err
+		}
+		if _, err := w.Write(escape(v.name)); err != nil {
+			return err
+		}
+		if _, err := w.Write(pHistogram); err != nil {
+			return err
+		}
+
+		if err := e.format(w, v.name, "_count", v.args, nil); err != nil {
+			return err
+		}
+		if _, err := w.Write(pSpace); err != nil {
+			return err
+		}
+		if _, err := fmt.Fprint(w, v.counts); err != nil {
+			return err
+		}
+		if _, err := w.Write(pNl); err != nil {
+			return err
+		}
+
+		if err := e.format(w, v.name, "_sum", v.args, nil); err != nil {
+			return err
+		}
+		if _, err := w.Write(pSpace); err != nil {
+			return err
+		}
+		if _, err := fmt.Fprint(w, v.sum); err != nil {
+			return err
+		}
+		if _, err := w.Write(pNl); err != nil {
+			return err
+		}
+
+		for i, j := range v.buckets {
+			if j == 0 {
+				continue
+			}
+			b := e.buckets[i]
+			if err := e.format(w, v.name, "_bucket", v.args, &b); err != nil {
+				return err
+			}
+			if _, err := w.Write(pSpace); err != nil {
+				return err
+			}
+			if _, err := fmt.Fprint(w, j); err != nil {
+				return err
+			}
+			if _, err := w.Write(pNl); err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -97,7 +172,7 @@ func (e *Exporter) writeCounterOrGauge(w io.Writer, t []byte, v value) error {
 	if _, err := w.Write(t); err != nil {
 		return err
 	}
-	if err := e.format(v.name, "", v.args, nil, w); err != nil {
+	if err := e.format(w, v.name, "", v.args, nil); err != nil {
 		return err
 	}
 	if _, err := w.Write(pSpace); err != nil {
@@ -113,7 +188,7 @@ func (e *Exporter) writeCounterOrGauge(w io.Writer, t []byte, v value) error {
 	return nil
 }
 
-func (e *Exporter) format(key, suffix string, args []xray.Arg, bucket *int64, w io.Writer) error {
+func (e *Exporter) format(w io.Writer, key, suffix string, args []xray.Arg, bucket *int64) error {
 	if _, err := w.Write(escape(key)); err != nil {
 		return err
 	}
@@ -128,48 +203,65 @@ func (e *Exporter) format(key, suffix string, args []xray.Arg, bucket *int64, w 
 		}
 		notFirst := false
 		if bucket != nil {
-			w.Write(pLe)
-			if *bucket == inf {
-				w.Write(pInf)
-			} else {
-				fmt.Fprint(w, pInf)
+			if _, err := w.Write(pLe); err != nil {
+				return err
 			}
-			w.Write(pQuote)
+			if *bucket == inf {
+				if _, err := w.Write(pInf); err != nil {
+					return err
+				}
+			} else {
+				if _, err := fmt.Fprint(w, *bucket); err != nil {
+					return err
+				}
+			}
+			if _, err := w.Write(pQuote); err != nil {
+				return err
+			}
 			notFirst = true
 		}
 		for _, a := range e.defaultArgs.Args() {
-			v := a.Value()
-			if len(v) == 0 {
-				continue
+			if err := writeArg(w, &notFirst, a); err != nil {
+				return err
 			}
-
-			if notFirst {
-				w.Write(pComma)
-			}
-			w.Write(escape(a.Name()))
-			w.Write(pEqQuote)
-			w.Write(escape(a.Value()))
-			w.Write(pQuote)
-			notFirst = true
 		}
 		for _, a := range args {
-			v := a.Value()
-			if len(v) == 0 {
-				continue
+			if err := writeArg(w, &notFirst, a); err != nil {
+				return err
 			}
-
-			if notFirst {
-				w.Write(pComma)
-			}
-			w.Write(escape(a.Name()))
-			w.Write(pEqQuote)
-			w.Write(escape(a.Value()))
-			w.Write(pQuote)
-			notFirst = true
 		}
-		w.Write(pEnd)
+		if _, err := w.Write(pEnd); err != nil {
+			return err
+		}
 	}
 
+	return nil
+}
+
+func writeArg(w io.Writer, notFirst *bool, a xray.Arg) error {
+	v := a.Value()
+	if len(v) == 0 {
+		return nil
+	}
+
+	if *notFirst {
+		if _, err := w.Write(pComma); err != nil {
+			return err
+		}
+	}
+	if _, err := w.Write(escape(a.Name())); err != nil {
+		return err
+	}
+	if _, err := w.Write(pEqQuote); err != nil {
+		return err
+	}
+	if _, err := w.Write(escape(a.Value())); err != nil {
+		return err
+	}
+	if _, err := w.Write(pQuote); err != nil {
+		return err
+	}
+	*notFirst = true
 	return nil
 }
 

@@ -55,6 +55,10 @@ type Exporter struct {
 
 	filter xray.ArgFilter
 	mutex  sync.Mutex
+
+	cntHandled int64
+	cntWritten int64
+	cntHTTP    int64
 }
 
 // value is an internal structure that holds counters and gaudges data

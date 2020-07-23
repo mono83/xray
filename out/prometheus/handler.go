@@ -9,6 +9,7 @@ func (e *Exporter) Handle(events ...xray.Event) {
 	e.mutex.Lock()
 	for _, event := range events {
 		if m, ok := event.(xray.MetricsEvent); ok {
+			e.cntHandled++
 			// Calculating metric key
 			key := xray.MetricGroupingKey(m, e.filter)
 
