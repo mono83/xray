@@ -54,9 +54,9 @@ func OrRoot(candidate Ray) Ray {
 	return candidate
 }
 
-// OrFootFork checks if candidate is nil.
+// OrRootFork checks if candidate is nil.
 // Returns candidate itself or ROOT ray fork if candidate is nil.
-func OrFootFork(candidate Ray) Ray {
+func OrRootFork(candidate Ray) Ray {
 	if candidate == nil {
 		return ROOT.Fork()
 	}
