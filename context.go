@@ -60,3 +60,9 @@ func FromContextOr(c context.Context, fallback Ray) Ray {
 
 	return OrRootFork(fallback)
 }
+
+// FromContextOrNew extracts xray.Ray from given Golang context.
+// If there were no xray.Ray in context new xray.Ray will be forked from ROOT.
+func FromContextOrNew(c context.Context) Ray {
+	return FromContextOr(c, nil)
+}
